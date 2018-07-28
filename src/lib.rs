@@ -13,20 +13,22 @@ impl Conf {
         Conf {
             filename: filename,
             cnftype: cnftype,
-            data: data
+            data:  data
         }
     }
 
-    pub fn change_data(&self) {
-        unimplemented!(); 
+    pub fn change_data(&mut self, name:String, value:String) {
+        if let Some(_) = &self.data.get(&name) {
+            &self.data.insert(name, value);
+        }
     }
 
-    pub fn append_data(&self){
-        unimplemented!();
+    pub fn append_data(&mut self, name:String, value: String){
+        &self.data.insert(name, value);
     }
 
     fn extracted_data(&self)->HashMap<String, String>{
-        unimplemented!();
+        unimplemented!(); //TODO: get the data from a confing file and put it in a hashmap
     }
 
     fn read_file(&self) -> Result<String, std::io::Error>{
@@ -39,7 +41,6 @@ impl Conf {
     fn write_to_file(){
         unimplemented!();
     }
-
 
 }
 
