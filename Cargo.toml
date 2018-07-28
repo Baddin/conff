@@ -1,0 +1,6 @@
+[package]
+name = "conff"
+version = "0.1.0"
+authors = ["baddin <baddin2016@gmail.com>"]
+
+[dependencies]
