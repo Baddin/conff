@@ -38,21 +38,23 @@ impl Conf {
         Ok(content)
     }
 
+  
+
     pub fn write_to_file(&self){
         match &self.cnftype {
-            ConfType::Toml => &self.write_data_to_toml();
-            ConfType::Yaml => &self.write_data_to_yaml();
-            ConfType::Json => &self.write_data_to_json();
-            ConfType::Csv => &self.write_data_to_csv();
-            _ => write_data()
-        }
+            ConfType::Toml => self.write_data_to_toml(),
+            ConfType::Yaml => self.write_data_to_yaml(),
+            ConfType::Json => self.write_data_to_json(),
+            ConfType::Csv => self.write_data_to_csv(),
+            _ => self.write_data()
+        };
     }
 
-    fn write_data_to_toml(){ unimplemented!() }
-    fn write_data_to_yaml(){ unimplemented!() }
-    fn write_data_to_json(){ unimplemented!() }
-    fn write_data_to_csv(){ unimplemented!() }
-    fn write_data(){ unimplemented!() }
+    fn write_data_to_toml(&self){ unimplemented!(); }
+    fn write_data_to_yaml(&self){ unimplemented!(); }
+    fn write_data_to_json(&self){ unimplemented!(); }
+    fn write_data_to_csv(&self){ unimplemented!(); }
+    fn write_data(&self){ unimplemented!(); }
 
 
 }
