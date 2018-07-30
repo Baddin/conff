@@ -1,4 +1,6 @@
 use std::fs::File;
+use std::fs;
+use std::path::Path;
 use std::io::prelude::*;
 use std::collections::HashMap;
 
@@ -9,7 +11,7 @@ struct Conf{
 }
 
 impl Conf {
-    pub fn new(&self, filename: String, cnftype: ConfType, data: HashMap<String, String>) -> Conf{
+     fn new(filename: String, cnftype: ConfType, data: HashMap<String, String>) -> Conf{
         Conf {
             filename: filename,
             cnftype: cnftype,
@@ -28,7 +30,7 @@ impl Conf {
     }
 
     fn extracted_data(&self)->HashMap<String, String>{
-        unimplemented!(); //TODO: get the data from a confing file and put it in a hashmap
+        unimplemented!(); //TODO: get the data from a config file and put it in a hashmap
     }
 
     fn read_file(&self) -> Result<String, std::io::Error>{
@@ -54,7 +56,15 @@ impl Conf {
     fn write_data_to_yaml(&self){ unimplemented!(); }
     fn write_data_to_json(&self){ unimplemented!(); }
     fn write_data_to_csv(&self){ unimplemented!(); }
-    fn write_data(&self){ unimplemented!(); }
+
+    fn write_data(&self){
+        let mut string_data = String::new();
+        for (key, value) in &self.data{
+            string_data += &format!("{} : {}\n", key, value);
+        }
+        
+        fs::write(&self.filename, string_data ).expect("Could not write to the config file.")
+    }
 
 
 }
@@ -68,3 +78,31 @@ enum ConfType{
 }
 
 
+#[cfg(test)]
+mod test {
+    use super::*; 
+
+    #[test]
+    fn test_write_data(){
+        let filename = "test.cnf".to_string();
+        let mut data =  HashMap::new();
+
+        data.insert("test0".to_string(), "test".to_string());
+        data.insert("test1".to_string(), "test".to_string());
+        data.insert("test2".to_string(), "test".to_string());
+        let test_conf = Conf::new(filename.clone(), ConfType::Other, data.clone());
+        test_conf.write_to_file();
+        assert_eq!(Path::new(&filename).exists(), true);
+
+        let mut f = File::open(&filename).expect("Could not open the config file.");
+        let mut content = String::new();
+        f.read_to_string(&mut content).expect("Could not read from the config file.");
+        let mut string_data = String::new();
+        for (key, value) in data{
+            string_data += &format!("{} : {}\n", key, value);
+        }
+        assert_eq!(content, string_data);
+        fs::remove_file(&filename);
+
+    }
+}
