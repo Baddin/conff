@@ -105,4 +105,21 @@ mod test {
         fs::remove_file(&filename);
 
     }
+
+    #[test]
+    fn test_append_data(){
+        let mut data = HashMap::new();
+        let mut test_conf = Conf::new("test".to_string(), ConfType::Other, data);
+        test_conf.append_data("test_key".to_string(), "test_value".to_string());
+        assert_eq!(test_conf.data.get("test_key").unwrap(), &"test_value".to_string());
+    }
+
+    #[test]
+    fn test_change_data(){
+        let mut data = HashMap::new();
+        data.insert("test_key".to_string(), "test_value".to_string());
+        let mut test_conf = Conf::new("test".to_string(), ConfType::Other, data);
+        test_conf.change_data("test_key".to_string(), "test_value_changed".to_string());
+        assert_eq!(test_conf.data.get("test_key").unwrap(), &"test_value_changed".to_string());
+    }
 }
