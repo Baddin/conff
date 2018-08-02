@@ -5,45 +5,60 @@ use std::io::prelude::*;
 use std::collections::HashMap;
 
 
-//testing branch
-struct Conf{
+
+struct TextConf{
     filename: String,
-    cnftype: ConfType,
     data: HashMap<String, String> 
 }
 
-impl Conf {
-     fn new(filename: String, cnftype: ConfType, data: HashMap<String, String>) -> Conf{
-        Conf {
+
+trait Conf {
+    fn new(filename: String, data: HashMap<String, String>) -> Self ;
+    fn change_data(&mut self, name:String, value:String);
+    fn append_data(&mut self, name:String, value: String);
+    fn extracted_data(&self)->HashMap<String, String>;
+    fn write_to_file(&self);
+}
+
+
+impl Conf for TextConf {
+    fn new(filename: String, data: HashMap<String, String>) -> TextConf{
+        TextConf {
             filename: filename,
-            cnftype: cnftype,
-            data:  data
+            data: data
         }
     }
 
-    pub fn change_data(&mut self, name:String, value:String) {
+    fn change_data(&mut self, name:String, value:String) {
         if let Some(_) = &self.data.get(&name) {
             &self.data.insert(name, value);
         }
     }
 
-    pub fn append_data(&mut self, name:String, value: String){
+    fn append_data(&mut self, name:String, value: String){
         &self.data.insert(name, value);
     }
 
     fn extracted_data(&self)->HashMap<String, String>{
         unimplemented!(); //TODO: get the data from a config file and put it in a hashmap
     }
-
-    fn read_file(&self) -> Result<String, std::io::Error>{
-        let mut f = File::open(&self.filename)?;
-        let mut content = String::new();
-        f.read_to_string(&mut content)?; 
-        Ok(content)
+    fn write_to_file(&self){
+        let mut string_data = String::new();
+        for (key, value) in &self.data{
+            string_data += &format!("{} : {}\n", key, value);
+        }
+        
+        fs::write(&self.filename, string_data ).expect("Could not write to the config file.")
     }
+}
+
+
+
+
+
 
   
-
+/*
     pub fn write_to_file(&self){
         match &self.cnftype {
             ConfType::Toml => self.write_data_to_toml(),
@@ -71,6 +86,7 @@ impl Conf {
 
 }
 
+
 enum ConfType{
     Toml,
     Yaml,
@@ -79,6 +95,16 @@ enum ConfType{
     Other
 }
 
+     */
+
+/*
+fn read_file(filename: String) -> Result<String, std::io::Error>{
+    let mut f = File::open(filename)?;
+    let mut content = String::new();
+    f.read_to_string(&mut content)?; 
+    Ok(content)
+}
+*/
 
 #[cfg(test)]
 mod test {
@@ -92,7 +118,7 @@ mod test {
         data.insert("test0".to_string(), "test".to_string());
         data.insert("test1".to_string(), "test".to_string());
         data.insert("test2".to_string(), "test".to_string());
-        let test_conf = Conf::new(filename.clone(), ConfType::Other, data.clone());
+        let test_conf:TextConf = Conf::new(filename.clone(), data.clone());
         test_conf.write_to_file();
         assert_eq!(Path::new(&filename).exists(), true);
 
@@ -111,7 +137,7 @@ mod test {
     #[test]
     fn test_append_data(){
         let mut data = HashMap::new();
-        let mut test_conf = Conf::new("test".to_string(), ConfType::Other, data);
+        let mut test_conf: TextConf = Conf::new("test".to_string(), data);
         test_conf.append_data("test_key".to_string(), "test_value".to_string());
         assert_eq!(test_conf.data.get("test_key").unwrap(), &"test_value".to_string());
     }
@@ -120,7 +146,7 @@ mod test {
     fn test_change_data(){
         let mut data = HashMap::new();
         data.insert("test_key".to_string(), "test_value".to_string());
-        let mut test_conf = Conf::new("test".to_string(), ConfType::Other, data);
+        let mut test_conf: TextConf = Conf::new("test".to_string(), data);
         test_conf.change_data("test_key".to_string(), "test_value_changed".to_string());
         assert_eq!(test_conf.data.get("test_key").unwrap(), &"test_value_changed".to_string());
     }
