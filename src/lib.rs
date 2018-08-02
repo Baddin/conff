@@ -4,6 +4,8 @@ use std::path::Path;
 use std::io::prelude::*;
 use std::collections::HashMap;
 
+
+//testing branch
 struct Conf{
     filename: String,
     cnftype: ConfType,
