@@ -56,56 +56,6 @@ impl Conf for TextConf {
 
 
 
-
-  
-/*
-    pub fn write_to_file(&self){
-        match &self.cnftype {
-            ConfType::Toml => self.write_data_to_toml(),
-            ConfType::Yaml => self.write_data_to_yaml(),
-            ConfType::Json => self.write_data_to_json(),
-            ConfType::Csv => self.write_data_to_csv(),
-            _ => self.write_data()
-        };
-    }
-
-    fn write_data_to_toml(&self){ unimplemented!(); }
-    fn write_data_to_yaml(&self){ unimplemented!(); }
-    fn write_data_to_json(&self){ unimplemented!(); }
-    fn write_data_to_csv(&self){ unimplemented!(); }
-
-    fn write_data(&self){
-        let mut string_data = String::new();
-        for (key, value) in &self.data{
-            string_data += &format!("{} : {}\n", key, value);
-        }
-        
-        fs::write(&self.filename, string_data ).expect("Could not write to the config file.")
-    }
-
-
-}
-
-
-enum ConfType{
-    Toml,
-    Yaml,
-    Json,
-    Csv,
-    Other
-}
-
-     */
-
-/*
-fn read_file(filename: String) -> Result<String, std::io::Error>{
-    let mut f = File::open(filename)?;
-    let mut content = String::new();
-    f.read_to_string(&mut content)?; 
-    Ok(content)
-}
-*/
-
 #[cfg(test)]
 mod test {
     use super::*; 
