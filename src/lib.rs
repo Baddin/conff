@@ -13,21 +13,23 @@ struct TextConf{
 
 
 trait Conf {
-    fn new(filename: String, data: HashMap<String, String>) -> Self ;
+   // fn new(filename: String, data: T) -> Self ;
     fn change_data(&mut self, name:String, value:String);
     fn append_data(&mut self, name:String, value: String);
-    fn extracted_data(&self)->HashMap<String, String>;
+   // fn extracted_data(&self)->HashMap<String, String>; //later
     fn write_to_file(&self);
 }
 
-
-impl Conf for TextConf {
-    fn new(filename: String, data: HashMap<String, String>) -> TextConf{
+impl TextConf{
+       fn new(filename: String, data: HashMap<String, String>) -> TextConf{
         TextConf {
             filename: filename,
             data: data
         }
     }
+}
+
+impl Conf for TextConf {
 
     fn change_data(&mut self, name:String, value:String) {
         if let Some(_) = &self.data.get(&name) {
@@ -39,9 +41,10 @@ impl Conf for TextConf {
         &self.data.insert(name, value);
     }
 
+    /*
     fn extracted_data(&self)->HashMap<String, String>{
         unimplemented!(); //TODO: get the data from a config file and put it in a hashmap
-    }
+    }*/ //later
     fn write_to_file(&self){
         let mut string_data = String::new();
         for (key, value) in &self.data{
@@ -68,7 +71,7 @@ mod test {
         data.insert("test0".to_string(), "test".to_string());
         data.insert("test1".to_string(), "test".to_string());
         data.insert("test2".to_string(), "test".to_string());
-        let test_conf:TextConf = Conf::new(filename.clone(), data.clone());
+        let test_conf = TextConf::new(filename.clone(), data.clone());
         test_conf.write_to_file();
         assert_eq!(Path::new(&filename).exists(), true);
 
@@ -87,7 +90,7 @@ mod test {
     #[test]
     fn test_append_data(){
         let mut data = HashMap::new();
-        let mut test_conf: TextConf = Conf::new("test".to_string(), data);
+        let mut test_conf = TextConf::new("test".to_string(), data);
         test_conf.append_data("test_key".to_string(), "test_value".to_string());
         assert_eq!(test_conf.data.get("test_key").unwrap(), &"test_value".to_string());
     }
@@ -96,7 +99,7 @@ mod test {
     fn test_change_data(){
         let mut data = HashMap::new();
         data.insert("test_key".to_string(), "test_value".to_string());
-        let mut test_conf: TextConf = Conf::new("test".to_string(), data);
+        let mut test_conf = TextConf::new("test".to_string(), data);
         test_conf.change_data("test_key".to_string(), "test_value_changed".to_string());
         assert_eq!(test_conf.data.get("test_key").unwrap(), &"test_value_changed".to_string());
     }
