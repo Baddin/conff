@@ -29,13 +29,14 @@ impl Conf for TextConf {
             &self.data.insert(name, value);
         }
     }
-
+    */
+    /*
     fn append_data(&mut self, name:String, value: String){
         &self.data.insert(name, value);
     }
-    */
+    
 
-    /*
+   
     fn extracted_data(&self)->HashMap<String, String>{
         unimplemented!(); //TODO: get the data from a config file and put it in a hashmap
     }*/ //later
@@ -58,7 +59,7 @@ mod test {
     use super::*; 
 
     #[test]
-    fn test_write_data(){
+    fn test_write_to_file(){
         let filename = "test.cnf".to_string();
         let mut data =  HashMap::new();
 
@@ -80,7 +81,7 @@ mod test {
         fs::remove_file(&filename);
 
     }
-
+    /*
     #[test]
     fn test_append_data(){
         let mut data = HashMap::new();
@@ -88,7 +89,9 @@ mod test {
         test_conf.append_data("test_key".to_string(), "test_value".to_string());
         assert_eq!(test_conf.data.get("test_key").unwrap(), &"test_value".to_string());
     }
+    */
 
+    /*
     #[test]
     fn test_change_data(){
         let mut data = HashMap::new();
@@ -97,4 +100,5 @@ mod test {
         test_conf.change_data("test_key".to_string(), "test_value_changed".to_string());
         assert_eq!(test_conf.data.get("test_key").unwrap(), &"test_value_changed".to_string());
     }
+    */
 }
